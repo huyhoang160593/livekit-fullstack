@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "checkJs": false,
+    "checkJs": true,
+    "strict": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
+    "jsx": "react-jsx",
     "target": "es2020",
     "module": "es2015",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-    }
+    },
   },
   "exclude": [
     "dist",
