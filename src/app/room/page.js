@@ -2,7 +2,6 @@
 
 import '@livekit/components-styles';
 import ky from 'ky';
-import CustomEventKey from '../constants/CustomEventKey';
 import { LiveKitRoom, VideoConference } from '@livekit/components-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -10,7 +9,7 @@ import { useMemo } from 'react';
 import { useCallback } from 'react';
 import { BiShare } from './svg/BiShare';
 import { useCopyToClipboard } from 'usehooks-ts';
-import { Notification } from '../components/Notification';
+import { generateNewNotification } from '../utils/generateCustomEvent';
 
 export default function RoomPage() {
   const searchParams = useSearchParams();
@@ -46,14 +45,11 @@ export default function RoomPage() {
       event.preventDefault();
       if (!roomParam) return;
       copy(roomParam);
-      const detailObject = /** @type {NotificationObject} */ ({
-        type: 'success',
-        message: `copy room id ${roomParam} succeeded`,
-      });
       window.dispatchEvent(
-        new CustomEvent(CustomEventKey.NEW_NOTIFICATION, {
-          detail: detailObject,
-        })
+        generateNewNotification(
+          'success',
+          `copy room id ${roomParam} succeeded`
+        )
       );
     },
     [copy, roomParam]
@@ -99,4 +95,3 @@ export default function RoomPage() {
 }
 
 /** @typedef {import("@/schemas/room").GetLKTokenResponseResult} GetLKTokenResponseResult */
-/** @typedef {import('../components/Notification').NotificationObject} NotificationObject */

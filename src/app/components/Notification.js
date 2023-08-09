@@ -34,7 +34,13 @@ export const Notification = () => {
       {notifications.map((notification, index) => (
         <div
           key={`notification-${index}`}
-          className={clsx('alert', `alert-${notification.type}`)}
+          className={clsx('alert',
+          {
+            ['alert-success']: notification.type === 'success',
+            ['alert-info']: notification.type === 'info',
+            ['alert-warning']: notification.type === 'warning',
+            ['alert-error']: notification.type === 'error'
+          })}
         >
           <span>{notification.message}</span>
         </div>
