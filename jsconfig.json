@@ -26,7 +26,8 @@
     "enable": true,
     "include": [
       "react",
-      "react-dom"
+      "react-dom",
+      "react-hook-form"
     ]
   }
 }

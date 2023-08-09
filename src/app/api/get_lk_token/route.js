@@ -9,15 +9,15 @@ export async function GET(/** @type {Request} */ request) {
     apiSecret: process.env.LIVEKIT_API_SECRET,
     wsUrl: process.env.NEXT_PUBLIC_LIVEKIT_URL
   });
-
-  // Validate params of the request
   if (!parseServerResult.success) {
     return NextResponse.json(parseServerResult.error.format(), {
       status: 500,
     });
   }
+
   const { searchParams } = new URL(request.url);
   const params = Object.fromEntries(searchParams.entries());
+  // Validate params of the request
   const parseRoomResult = RoomParamsSchema.safeParse(params);
   if (!parseRoomResult.success) {
     return NextResponse.json(parseRoomResult.error.format(), {

@@ -1,39 +1,73 @@
 'use client';
 
+import '@livekit/components-styles';
 import ky from 'ky';
 import { LiveKitRoom, VideoConference } from '@livekit/components-react';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import '@livekit/components-styles'
+import { useMemo } from 'react';
+import { useCallback } from 'react';
+import { BiShare } from './svg/BiShare';
+import { useCopyToClipboard } from 'usehooks-ts';
 
 export default function RoomPage() {
-  const room = 'quickstart-room';
-  const name = 'quickstart-user';
+  const searchParams = useSearchParams();
+  const roomParam = useMemo(() => searchParams.get('room'), [searchParams]);
+  const usernameParam = useMemo(
+    () => searchParams.get('username'),
+    [searchParams]
+  );
 
   const [token, setToken] = useState('');
-  async function generateToken() {
-    try {
-      const apiParams = new URLSearchParams({
-        room,
-        username: name
-      })
-      /** @type {import("@/schemas/room").GetLKTokenResponseResult} */
-      const response = await ky
-        .get(`/api/get_lk_token?${apiParams.toString()}`)
-        .json();
-      setToken(response.token);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const [_value, copy] = useCopyToClipboard()
+
+  const generateToken = useCallback(
+    async (/** @type {string} */ room, /** @type {string} */ username) => {
+      try {
+        const apiParams = new URLSearchParams({
+          room,
+          username,
+        });
+        /** @type {GetLKTokenResponseResult} */
+        const response = await ky
+          .get(`/api/get_lk_token?${apiParams.toString()}`)
+          .json();
+        setToken(response.token);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    []
+  );
+  const onShareClickHandle = useCallback(
+    (/** @type {React.MouseEvent<HTMLButtonElement, MouseEvent>} */ event) => {
+      event.preventDefault();
+      if (!roomParam) return
+      copy(roomParam)
+    },
+    [copy, roomParam]
+  );
   useEffect(() => {
-    generateToken();
-  }, []);
+    if (!roomParam || !usernameParam) return;
+    generateToken(roomParam, usernameParam);
+  }, [generateToken, roomParam, usernameParam]);
 
   if (token === '') {
-    return <div>Getting token...</div>;
+    return (
+      <main className="w-screen h-screen flex flex-col justify-center items-center">
+        <span className="loading loading-ring loading-lg"></span>
+        <span className="text-warning">
+          {!Boolean(roomParam) && "'room' params is not defined"}
+        </span>
+        <span className="text-warning">
+          {!Boolean(usernameParam) && "'username' params is not defined"}
+        </span>
+      </main>
+    );
   }
+
   return (
-    <div data-lk-theme="default">
+    <main data-lk-theme="default" className="w-screen h-screen">
       <LiveKitRoom
         serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
         token={token}
@@ -43,6 +77,14 @@ export default function RoomPage() {
       >
         <VideoConference />
       </LiveKitRoom>
-    </div>
+      <button
+        onClick={onShareClickHandle}
+        className="btn btn-circle btn-outline fixed right-7 top-7"
+      >
+        <BiShare />
+      </button>
+    </main>
   );
 }
+
+/** @typedef {import("@/schemas/room").GetLKTokenResponseResult} GetLKTokenResponseResult */
