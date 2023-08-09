@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
   const {
     Enum: { room, username },
   } = useMemo(() => RoomParamsSchema.keyof(), []);
@@ -26,13 +26,13 @@ export default function Home() {
 
   const roomIDWatch = useWatch({
     control,
-    name: room
-  })
+    name: room,
+  });
 
   /** @type {SubmitHandler<RoomFormFieldValues>} */
   const onFormSubmit = (data) => {
-    const searchParams = new URLSearchParams(data)
-    router.push(`/room?${searchParams.toString()}`)
+    const searchParams = new URLSearchParams(data);
+    router.push(`/room?${searchParams.toString()}`);
     return;
   };
 
@@ -70,7 +70,9 @@ export default function Home() {
                 {...register(username)}
               />
               <label className="label">
-                <span className="label-text-alt text-error">{errors.username?.message}</span>
+                <span className="label-text-alt text-error">
+                  {errors.username?.message}
+                </span>
               </label>
             </fieldset>
             <fieldset className="form-control w-full max-w-xs">
@@ -87,13 +89,15 @@ export default function Home() {
                 {...register(room)}
               />
               <label className="label">
-                <span className="label-text-alt text-error">{errors.room?.message}</span>
+                <span className="label-text-alt text-error">
+                  {errors.room?.message}
+                </span>
               </label>
             </fieldset>
           </div>
           <div className="card-actions justify-end">
             <button type="submit" className="btn btn-primary">
-              {roomIDWatch?.length > 0 ? "Join Room" : "Create Room"}
+              {roomIDWatch?.length > 0 ? 'Join Room' : 'Create Room'}
             </button>
           </div>
         </section>

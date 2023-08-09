@@ -2,6 +2,7 @@
 
 import '@livekit/components-styles';
 import ky from 'ky';
+import CustomEventKey from '../constants/CustomEventKey';
 import { LiveKitRoom, VideoConference } from '@livekit/components-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ import { useMemo } from 'react';
 import { useCallback } from 'react';
 import { BiShare } from './svg/BiShare';
 import { useCopyToClipboard } from 'usehooks-ts';
+import { Notification } from '../components/Notification';
 
 export default function RoomPage() {
   const searchParams = useSearchParams();
@@ -19,7 +21,7 @@ export default function RoomPage() {
   );
 
   const [token, setToken] = useState('');
-  const [_value, copy] = useCopyToClipboard()
+  const [_value, copy] = useCopyToClipboard();
 
   const generateToken = useCallback(
     async (/** @type {string} */ room, /** @type {string} */ username) => {
@@ -42,8 +44,17 @@ export default function RoomPage() {
   const onShareClickHandle = useCallback(
     (/** @type {React.MouseEvent<HTMLButtonElement, MouseEvent>} */ event) => {
       event.preventDefault();
-      if (!roomParam) return
-      copy(roomParam)
+      if (!roomParam) return;
+      copy(roomParam);
+      const detailObject = /** @type {NotificationObject} */ ({
+        type: 'success',
+        message: `copy room id ${roomParam} succeeded`,
+      });
+      window.dispatchEvent(
+        new CustomEvent(CustomEventKey.NEW_NOTIFICATION, {
+          detail: detailObject,
+        })
+      );
     },
     [copy, roomParam]
   );
@@ -88,3 +99,4 @@ export default function RoomPage() {
 }
 
 /** @typedef {import("@/schemas/room").GetLKTokenResponseResult} GetLKTokenResponseResult */
+/** @typedef {import('../components/Notification').NotificationObject} NotificationObject */

@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Notification } from './components/Notification'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,7 +12,10 @@ export const metadata = {
 export default function RootLayout(/** @type {React.PropsWithChildren} */{ children }) {
   return (
     <html lang="en" data-theme='light'>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <Notification />
+      </body>
     </html>
   )
 }
