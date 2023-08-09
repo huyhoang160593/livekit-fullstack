@@ -11,6 +11,7 @@ export const Notification = () => {
     /** @type {NotificationObject[]} */ ([])
   );
   const currentTimeout = useRef(/** @type {NodeJS.Timeout | null} */(null))
+
   useEffect(() => {
     function onNewNotificationHandle(/** @type {Event & {detail?: NotificationObject}} */event) {
       if (!event.detail) return
