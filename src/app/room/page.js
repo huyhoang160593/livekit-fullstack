@@ -86,7 +86,7 @@ export default function RoomPage() {
       </LiveKitRoom>
       <button
         onClick={onShareClickHandle}
-        className="btn btn-circle btn-outline fixed right-7 top-7"
+        className="btn btn-circle btn-outline fixed left-7 top-7"
       >
         <BiShare />
       </button>

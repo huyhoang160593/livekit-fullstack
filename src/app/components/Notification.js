@@ -27,10 +27,9 @@ export const Notification = () => {
     return () => {
       window.removeEventListener(CustomEventKey.NEW_NOTIFICATION, onNewNotificationHandle)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [notifications])
   return (
-    <div className="toast">
+    <div className="toast toast-start">
       {notifications.map((notification, index) => (
         <div
           key={`notification-${index}`}
